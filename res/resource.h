@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
-// Used by common.rc
+// Microsoft Visual C++ 生成的包含文件。
+// 供 common.rc 使用
 //
 #define IDD_DLG_MAIN                    101
 #define IDI_ICON1                       106
@@ -20,6 +20,8 @@
 #define IDD_DIALOG2                     139
 #define IDD_TEMPLATE                    139
 #define IDR_MENU_SENDCMD                140
+#define IDD_DIALOG_WAVEFORM_SETTING     200
+#define IDD_DIALOG_WAVEFORM_VALUE       201
 #define IDC_BTN_SEND                    1000
 #define IDC_CBO_CP                      1002
 #define IDC_CBO_BR                      1005
@@ -82,6 +84,17 @@
 #define MAINSTATIC_AUTOSEND             1079
 #define IDC_CHECK_SIMPLE                1081
 #define IDC_CHECK2                      1085
+#define IDC_EDIT_WINDOWWIDTH            2000
+#define IDC_EDIT_WINDOWHEIGHT           2001
+#define IDC_EDIT_DOTSIZE                2002
+#define IDC_EDIT_UPVAL                  2003
+#define IDC_EDIT_DNVAL                  2004
+#define IDC_COMBO_INPUTSELECT           2005
+#define IDC_STATIC_POSX                 2006
+#define IDC_STATIC_POSY                 2007
+#define IDC_STATIC_REALX                2008
+#define IDC_STATIC_REALY                2009
+#define IDC_BTN_WDSETTING               2010
 #define MENU_OTHER_ASCII                40001
 #define MENU_OTHER_HELP                 40002
 #define MENU_OTHER_CALC                 40003
@@ -125,9 +138,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         40054
-#define _APS_NEXT_CONTROL_VALUE         1091
+#define _APS_NEXT_RESOURCE_VALUE        204
+#define _APS_NEXT_COMMAND_VALUE         40100
+#define _APS_NEXT_CONTROL_VALUE         2011
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

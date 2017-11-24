@@ -65,8 +65,8 @@ static COLORREF cr_table[] ={
 namespace Common{
 	int c_asctable_dlg::axisx = -1;
 	int c_asctable_dlg::axisy = -1;
-	int c_asctable_dlg::_fgcolor = 0;
-	int c_asctable_dlg::_bgcolor = 6;
+	int c_asctable_dlg::_fgcolor = 6;//0;
+	int c_asctable_dlg::_bgcolor = 7;//6;
 
 	LRESULT c_asctable_dlg::handle_message(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
 	{
@@ -75,14 +75,14 @@ namespace Common{
 		case WM_ERASEBKGND:
 			return TRUE;
 
-		case WM_LBUTTONDOWN:
-			_fgcolor = (++_fgcolor) % __ARRAY_SIZE(cr_table);
-			::InvalidateRect(m_hWnd, NULL, TRUE);
-			return 0;
-		case WM_RBUTTONDOWN:
-			_bgcolor = (++_bgcolor) % __ARRAY_SIZE(cr_table);
-			::InvalidateRect(m_hWnd, NULL, TRUE);
-			return 0;
+		//case WM_LBUTTONDOWN:
+		//	_fgcolor = (++_fgcolor) % __ARRAY_SIZE(cr_table);
+		//	::InvalidateRect(m_hWnd, NULL, TRUE);
+		//	return 0;
+		//case WM_RBUTTONDOWN:
+		//	_bgcolor = (++_bgcolor) % __ARRAY_SIZE(cr_table);
+		//	::InvalidateRect(m_hWnd, NULL, TRUE);
+		//	return 0;
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
@@ -114,7 +114,8 @@ namespace Common{
 				SetBkMode(hdc,TRANSPARENT);
 				SetTextColor(hdc,cr_table[_fgcolor]);
 
-				len=sprintf(str,"%4s %4s  %4s  %s","Ê®","°Ë","Ê®Áù","ÃèÊö");
+				//len=sprintf(str,"%4s %4s  %4s  %s","Ê®","°Ë","Ê®Áù","ÃèÊö");
+				len = sprintf(str, "%4s %4s  %4s  %s", "DEC", "OCT", "HEX", "Description");
 				TextOut(hdc,x,y,str,len);
 				y += ASC_FONT_HEIGHT+ASC_TEXT_ASCENT;
 				len=sprintf(str,"----------------------------------------");
@@ -203,7 +204,8 @@ namespace Common{
 			}
 		case WM_INITDIALOG:
 			{
-				::SetWindowText(m_hWnd, "ASCIIÂë±í: ×ó¼ü: Ç°¾°É«, ÓÒ¼ü: ±³¾°É«");
+				//::SetWindowText(m_hWnd, "ASCIIÂë±í: ×ó¼ü: Ç°¾°É«, ÓÒ¼ü: ±³¾°É«");
+				SetWindowText(m_hWnd, "ASCIIÂë±í");
 				SCROLLINFO si;
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_ALL;

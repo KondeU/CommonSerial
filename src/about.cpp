@@ -7,18 +7,19 @@ static char* __THIS_FILE__ = __FILE__;
 
 const char* Common::c_about_dlg::about_str = 
 		"软件说明:\r\n"
-		"    1.软件用C语言/C++/SDK方式完成, 绿色小巧, 不会给系统带来任何的垃圾文件\r\n"
-		"    2.能实现对串口通过的读取与写入,16进制与字符方式两种\r\n"
-		"    3.支持文件发送,保存到文本\r\n"
+		"    1.软件用C语言/C++/SDK方式完成,高效简洁,不增添任何系统附属文件\r\n"
+		"    2.能实现对串口的读取与写入,提供16进制与字符方式两种显示方式\r\n"
+		"    3.支持文件发送与保存至文本\r\n"
 		"    4.支持自动发送,自定义发送周期\r\n"
-		"    5.自动识别已有串口,检测串口插入与移除\r\n"
+		"    5.自动识别已有串口,检测新串口的插入与已插入串口的移除\r\n"
 		"    6.支持串口超时设置\r\n"
 		"    7.支持DTR/RTS引脚电平控制\r\n"
 		"    8.提供对驱动设置的支持\r\n"
-		"    9.提供128个ASCII码表供代码转换时参考\r\n"
-		"    10.提供小工具:字符串转16进制数组\r\n"
-		"    11.提供表达式求值计算器,包括基本算术/逻辑运算\r\n"
-		"    12.接收字符数据时, 对'\b'控制字符支持\r\n"
+		"    9.提供ASCII码表供代码转换时参考\r\n"
+		"    10.提供字符串转16进制数组小工具\r\n"
+		"    11.提供表达式求值计算器,包括基本算术与逻辑运算\r\n"
+		"    12.接收字符数据时,对'\\b'控制字符支持\r\n"
+		"    13.（第2版本）提供波形绘制功能，方便参数调节\r\n"
 		"-----------------------------------------------------\r\n"
 		"软件参数:\r\n"
 		"    最大发送文件大小:1MB(1048576字节)实际文件大小.\r\n"
@@ -33,13 +34,19 @@ const char* Common::c_about_dlg::about_str =
 		"        波特率:9600\r\n"
 		"        校验位:无\r\n"
 		"        数据位:8位\r\n"
-		"        停止位:1位\r\n\r\n"
+		"        停止位:1位\r\n"
 		"-----------------------------------------------------\r\n"
 		"其它:\r\n"
-		"    自动发送时间间隔范围:10ms~60000ms\r\n"
+		"    自动发送时间间隔范围:50ms~60000ms\r\n"
 		"    开启自动发送后将不允许手动发送\r\n"
 		"    若修改发送数据, 自动发送将被取消\r\n"
-		"    16进制发送格式为:2个16进制位+1个空格\r\n"
+		"    16进制发送格式为:2个16进制位间需加1个空格\r\n"
+		"-----------------------------------------------------\r\n"
+		"（第2版本）波形绘制功能的使用：\r\n"
+		"    \r\n"
+		"    \r\n"
+		"    \r\n"
+		"    \r\n"
 		"-----------------------------------------------------\r\n"
 		"更新:\r\n"
 		"2012-12-24 1.0.0.0:\r\n"
@@ -137,7 +144,7 @@ const char* Common::c_about_dlg::about_str =
 		"    细节:根据用户要求,窗口大小现在可以变化; 如果不满意于接收/发送区的文本框过小, 可以左右拖动窗口以改变窗口大小\r\n"
 		"    细节:由于原来接收区没有水平滚动条,所以数据可能自动被换行, 现在已纠正,数据不再自动换行, 要换行, 请使用 \'\\n\'\r\n"
 		"2013-09-10 1.13:\r\n"
-		"	 增加:现在可以手动编写待发送的命令文件,并发送命令了 - 在发送文件时选择 命令文件, 格式见博客后面的介绍\r\n"
+		"    增加:现在可以手动编写待发送的命令文件,并发送命令了 - 在发送文件时选择 命令文件, 格式见博客后面的介绍\r\n"
 		"    增加:字符发送模式下,可以选择取消回车换行符的发送,可以选择插入转义字符\r\n"
 		"        1.支持的字符型转义字符:\r\n"
 		"            \\r,\\n,\\t,\\v,\\a,\\b,\\\\\r\n"
@@ -172,13 +179,17 @@ const char* Common::c_about_dlg::about_str =
 		"    修复:修复错误解析16进制转义字符问题\r\n"
 		"    修复:解决一个中文字符分两次发送的乱码问题\r\n"
 		"2015-08-02: 1.19 久违了\r\n"
-		"    修复了“保存到文件”功能\r\n"
-		"    解决无法识别虚拟串口的问题 && 解决某些不支持的事件导致 SetCommMask 失败问题\r\n"
-		"    编辑框增加常用功能：鼠标中键删除，计算器\r\n"
-		"    去掉了一些不需要的功能 libtccw32, str2hex, pinctrl\r\n"
-        "2015-09-13: 1.20 没有什么修改，只是整理了文档\r\n"
-        "    没做什么实质性的修改，增加了文档，集成了idxml和tinyxml工具库\r\n"
-		""
+		"    修复了\"保存到文件\"功能\r\n"
+		"    解决无法识别虚拟串口的问题 && 解决某些不支持的事件导致SetCommMask失败问题\r\n"
+		"    编辑框增加常用功能:鼠标中键删除,计算器\r\n"
+		"    去掉了一些不需要的功能libtccw32,str2hex,pinctrl\r\n"
+        "2015-09-13: 1.20 没有什么修改,只是整理了文档\r\n"
+        "    没做什么实质性的修改,增加了文档,集成了idxml和tinyxml工具库\r\n"
+		"-----------------------------------------------------\r\n"
+		"更新:\r\n"
+        "2017-11-17: 2.01 获得授权，接着原作者的代码继续维护\r\n"
+        "    修改了部分代码及图标，增添了波形绘制的功能，为了保证绘制质量，波形绘制的刷新间隔应大于55ms\r\n"
+		"\r\n\r\n"
 		;
 
 namespace Common{
@@ -189,7 +200,7 @@ namespace Common{
 		case WM_INITDIALOG:
 		{
 			SetWindowText(m_hWnd, "关于 " COMMON_NAME_AND_VERSION);
-			SetWindowText(*_layout.FindControl("stk_name"), COMMON_NAME_AND_VERSION "  编译时间:" __DATE__ " - " __TIME__);
+			SetWindowText(*_layout.FindControl("stk_name"), COMMON_NAME_AND_VERSION " at " __DATE__ " - " __TIME__);
 			SetWindowText(*_layout.FindControl("edit_help"), about_str);
 			SetFocus(*_layout.FindControl("btn_ok"));
 			CenterWindow();
@@ -215,7 +226,7 @@ namespace Common{
 	LPCTSTR c_about_dlg::get_skin_xml() const
 	{
 		return 
-R"feifei(
+R"(
 <Window size="420,450">
 	<Font name = "微软雅黑" size = "12" default = "true" />
 	<Vertical>
@@ -224,7 +235,8 @@ R"feifei(
 				<Control width="45" />
 				<Vertical inset="0,0,0,5">
 					<Static name="stk_name" height="20"/>
-					<Static text="女孩不哭(QQ:191035066) 开始于 2012-12-24 平安夜" height="20"/>
+					<Static text="女孩不哭 开始于 2012-12-24 平安夜" height="20"/>
+					<Static text="KondeU 更新于 2017-11-17" height="20"/>
 				</Vertical>
 			</Horizontal>
 			<Edit style="readonly,multiline,hscroll,vscroll" exstyle="clientedge" name="edit_help" inset="0,5,0,5" minheight="300"/>
@@ -238,7 +250,7 @@ R"feifei(
 		</Vertical>
 	</Vertical>
 </Window>
-)feifei";
+)";
 	}
 
 	LRESULT c_about_dlg::on_command_ctrl(HWND hwnd, SdkLayout::CControlUI* ctrl, int code)
@@ -246,8 +258,8 @@ R"feifei(
 		auto& name = ctrl->GetName();
 		if (name == "btn_website"){
 			if (code == BN_CLICKED){
-				char* web = "http://blog.twofei.com/566/";
-				ShellExecute(NULL, "open", web, NULL, NULL, SW_SHOWNORMAL);
+				//char* web = "http://blog.twofei.com/566/";
+				//ShellExecute(NULL, "open", web, NULL, NULL, SW_SHOWNORMAL);
 				return 0;
 			}
 		}

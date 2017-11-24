@@ -98,7 +98,8 @@ namespace Common {
 		layout_resize(m_layout, NULL);
 
 		// 界面元素
-		::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 350, 0);
+		//::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 350, 0);
+		::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 260, 0);
 		::SetDlgItemText(m_hWnd, IDC_STATIC_TIMER, "00:00:00");
 		
 		// 界面预定义
@@ -156,7 +157,7 @@ namespace Common {
 		init_from_config_file();
 
 		// 欢迎语
-		update_status("欢迎使用 Common串口调试工具! Enjoy! :-)");
+		update_status("欢迎使用CommonSerial串口调试工具！");
 
 		return 0;
 	}
@@ -418,14 +419,21 @@ namespace Common {
 		{
 		// 工具箱/帮助菜单
 		case MENU_OTHER_HELP:		(new c_about_dlg)->do_modal(*this); break;
-		//case MENU_OTHER_STR2HEX:	(new c_str2hex_dlg)->do_modeless(this); break;
 		case MENU_OTHER_ASCII:		(new c_asctable_dlg)->do_modeless(*this);break;
 		case MENU_OTHER_CALC:		::ShellExecute(m_hWnd, "open", "calc", NULL, NULL, SW_SHOWNORMAL);	break;
 		case MENU_OTHER_NOTEPAD:	::ShellExecute(m_hWnd, "open", "notepad", NULL, NULL, SW_SHOWNORMAL); break;
 		case MENU_OTHER_DEVICEMGR:	::ShellExecute(m_hWnd, "open", "devmgmt.msc", NULL, NULL, SW_SHOWNORMAL); break;
 
+		case MENU_OTHER_DRAW: // Addition Funcs of waveform display
+		{
+			#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
+			WaveformDisplay(this);
+		}
+		break;
+
 		case MENU_OTHER_MONITOR:
-		case MENU_OTHER_DRAW:
+		//case MENU_OTHER_STR2HEX:	(new c_str2hex_dlg)->do_modeless(*this); break;
+		case MENU_OTHER_STR2HEX:
 			msgbox(MB_ICONINFORMATION,0,"not implemented!"); break;
 		case MENU_OTHER_NEWVERSION:break;
 
@@ -735,7 +743,7 @@ namespace Common {
 		int cursel = ComboBox_GetCurSel(_hCP);
 		t_com_item* pi = (t_com_item*)(cursel == -1 ? 0 : ComboBox_GetItemData(_hCP,cursel));
 		if (!pi){
-			msgbox(MB_ICONEXCLAMATION, NULL, "没有可用的串口, 请点击串口列表刷新!");
+			msgbox(MB_ICONEXCLAMATION, NULL, "没有可用的串口, 请点击串口列表刷新！");
 			return false;
 		}
 
@@ -746,9 +754,9 @@ namespace Common {
 	{
 		int count = ComboBox_GetCount(_hCP);
 		if (count == 0){
-			ComboBox_InsertString(_hCP, -1, "< 没 有 找 到 任 何 可 用 的 串 口 ! >  点 击 刷 新 列 表");
+			ComboBox_InsertString(_hCP, -1, "<没有找到任何可用的串口！点击刷新列表！>");
 			ComboBox_SetItemData(_hCP, 0, 0);
-			update_status("没有找到可用的串口!");
+			update_status("没有找到可用的串口！");
 		}
 		else{
 			update_status("共找到 %d 个串口设备!", count);

@@ -84,6 +84,12 @@
     <ClCompile Include="..\src\Windows\DialogBuilder.cpp">
       <Filter>Windows</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp">
+      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AdditionFuncs\CConfig.cpp">
+      <Filter>AdditionFuncs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\struct\list.h">
@@ -172,6 +178,12 @@
     <ClInclude Include="..\src\Windows\DialogBuilder.h">
       <Filter>Windows</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.h">
+      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AdditionFuncs\CConfig.h">
+      <Filter>AdditionFuncs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
@@ -179,15 +191,6 @@
     </Filter>
     <Filter Include="struct">
       <UniqueIdentifier>{d9a76f60-29ba-406f-878d-5cb33039f150}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="..\src\Windows">
-      <UniqueIdentifier>{caabdc79-bee4-4ed1-9e11-90d00c367714}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="..\src\sdklayout">
-      <UniqueIdentifier>{cc66f5ef-0aeb-44a3-9ac0-1fdb8c77d0b5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="..\src\tinyxml2">
-      <UniqueIdentifier>{8ba952e1-cc25-488a-a41c-30399ca0a488}</UniqueIdentifier>
     </Filter>
     <Filter Include="Windows">
       <UniqueIdentifier>{15db0d98-9a56-4a42-a150-c5ad444cf07b}</UniqueIdentifier>
@@ -197,6 +200,12 @@
     </Filter>
     <Filter Include="sdklayout">
       <UniqueIdentifier>{be4a60a9-8b68-4cfe-a520-35707917f52b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdditionFuncs">
+      <UniqueIdentifier>{8707d0f1-182f-4fd3-bc31-daaf251e7d0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdditionFuncs\WaveformDisplay">
+      <UniqueIdentifier>{9862ec5e-9044-4c9f-9de9-918ab188a533}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

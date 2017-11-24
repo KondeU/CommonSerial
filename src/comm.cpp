@@ -426,7 +426,7 @@ namespace Common{
 					debug_out(("[读线程] 读取 %d 字节, bRet==TRUE, nBytesToRead: %d\n", nRead, nBytesToRead));
 				}
 				else{
-					_notifier->msgerr("[写线程] GetOverlappedResult失败!\n");
+					_notifier->msgerr("[读线程] GetOverlappedResult失败!\n");
 					goto _restart;
 				}
 			}
@@ -471,6 +471,13 @@ namespace Common{
 				nBytesToRead--;
 			}
 		}
+
+		// Addition Funcs of waveform display
+		{
+			#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
+			WDReceiveData(block_data, nBytesToRead);
+		}
+		
 		call_data_receivers(block_data, nBytesToRead);
 		goto _get_packet;
 

@@ -51,7 +51,6 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	Sleep(500);
 	FreeConsole();
 #endif
-	MessageBeep(MB_OK);
+	//MessageBeep(MB_OK);
 	return 0;
 }
-
