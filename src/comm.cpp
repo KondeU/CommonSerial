@@ -471,13 +471,13 @@ namespace Common{
 				nBytesToRead--;
 			}
 		}
-
-		// Addition Funcs of waveform display
-		{
-			#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
-			WDReceiveData(block_data, nBytesToRead);
-		}
 		
+		// Addition Funcs of waveform display
+		//{
+		//	#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
+		//	WDReceiveData(block_data, nBytesToRead);
+		//}
+
 		call_data_receivers(block_data, nBytesToRead);
 		goto _get_packet;
 
@@ -506,6 +506,14 @@ namespace Common{
 		for (int i = 0; i < _data_receivers.size(); i++){
 			_data_receivers[i]->receive(ba, cb);
 		}
+
+		// Addition Funcs of waveform display
+		{
+			#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
+			//WDReceiveData(block_data, nBytesToRead);
+			WDReceiveData((PBYTE)ba, cb);
+		}
+
 		_data_receiver_lock.unlock();
 	}
 

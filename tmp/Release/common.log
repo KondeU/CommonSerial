@@ -1,11 +1,8 @@
-﻿  WaveformDisplay.cpp
-..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp(203): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp(209): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp(214): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
+﻿  common.cpp
   正在生成代码
-  2 of 2840 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
+  0 of 2845 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    2 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   已完成代码的生成
-  common.vcxproj -> C:\Users\KondeU\Desktop\串口\Myself\CommonSerial\pro\..\bin\common.exe
+  common.vcxproj -> C:\Users\KondeU\Documents\GitHub\CommonSerial\pro\..\bin\common.exe
   common.vcxproj -> ..\bin\common.pdb (Full PDB)

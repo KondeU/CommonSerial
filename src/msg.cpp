@@ -509,18 +509,21 @@ namespace Common {
 			msgbox(MB_ICONINFORMATION, dlg.get_buffer(), "文件已成功保存。\n文件大小: %d", size);
 			return 0;
 		}
+
 		case IDC_BTN_SEND:
 			if (code == BN_CLICKED){
 				com_do_send(false);
 				return 0;
 			}
 			break;
+
 		case IDC_BTN_OPEN:
 			if (code == BN_CLICKED){
 				com_openclose();
 				return 0;
 			}
 			break;
+
 		case IDC_BTN_MORE_SETTINGS:
 			if (code == BN_CLICKED){
 				POINT pt;
@@ -531,6 +534,7 @@ namespace Common {
 				return 0;
 			}
 			break;
+
 		case IDC_CBO_CP:
 			// todo: buggy, multi times update
 			if (code == CBN_SELENDOK || code == CBN_SELENDCANCEL){
@@ -543,6 +547,7 @@ namespace Common {
 				}
 			}
 			break;
+
 		case IDC_CBO_BR:
 			if (code == CBN_SELENDOK){
 				int index = ComboBox_GetCurSel(_hBR);
@@ -604,6 +609,7 @@ namespace Common {
 				}
 			}
 			break;
+
 		case IDC_RADIO_SEND_CHAR:
 		case IDC_RADIO_SEND_HEX:
 			if (code == BN_CLICKED){
@@ -611,6 +617,7 @@ namespace Common {
 				return 0;
 			}
 			break;
+
 		case IDC_RADIO_RECV_CHAR:
 		case IDC_RADIO_RECV_HEX:
 			if (code == BN_CLICKED){
@@ -618,6 +625,7 @@ namespace Common {
 				return 0;
 			}
 			break;
+
 		case IDC_BTN_SEND_FMT_CONFIG:
 			if (code == BN_CLICKED){
 				bool bchar = is_send_data_format_char();
@@ -627,9 +635,11 @@ namespace Common {
 				return 0;
 			}
 			break;
+
 		case IDC_CHK_AUTO_SEND:
 			switch_auto_send();
 			return 0;
+
 		// 接收数据中间的按钮
 		case IDC_BTN_HELP:
 			if(code==BN_CLICKED){
@@ -641,6 +651,7 @@ namespace Common {
 				return 0;
 			}
 			break;
+
 		// 发送数据按钮
 		case IDC_BTN_CLR_COUNTER:
 			if(code==BN_CLICKED){
@@ -688,6 +699,12 @@ namespace Common {
 				return 0;
 			}
 			break;
+
+		// 停止接收框显示
+		//case IDACC_STOPDISP:
+			//editor_recv_hex()->append_text
+			//break;
+
 		// 置顶 && 简洁模式
 		case IDC_CHK_TOP:
 			if (code == BN_CLICKED){

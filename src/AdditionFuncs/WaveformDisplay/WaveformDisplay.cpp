@@ -4,7 +4,7 @@
 
 #include "WaveformDisplay.h"
 
-#define _DEBUG_FORCE_FLASH true
+#define _DEBUG_FORCE_FLASH false
 
 #define WM_WAVEFORMDISPLAY_RECVDATA (WM_USER + 0x0101)
 
@@ -46,6 +46,7 @@ namespace
 
 	int iWndPixWidth = 640, iWndPixHeight = 480;
 	int iDotSize = 1;
+	int iSampleDrawGap = 1;
 	double dUpVal = 255.0, dDnVal = 0.0;
 	string szTypeSelect = TEXT("BYTE");
 
@@ -59,7 +60,11 @@ namespace
 		TEXT("DOUBLE")
 	};
 
+	string szDrawType = TEXT("DOT");
+
 	double * pdData = nullptr;
+
+	bool bInternalUsed = false;
 }
 
 #pragma pack(push, 1)
@@ -151,6 +156,42 @@ void LoadConfig()
 	dUpVal = cCfg.GetDouble("default", "dUpVal", 255.0);
 	dDnVal = cCfg.GetDouble("default", "dDnVal",   0.0);
 	szTypeSelect = cCfg.GetString("default", "szTypeSelect", "BYTE");
+
+	bInternalUsed = cCfg.GetBoolean("default", "bInternalUsed");
+
+	szDrawType = cCfg.GetString("default", "szDrawType", "DOT");
+	iSampleDrawGap = cCfg.GetInteger("default", "iSampleDrawGap", 1);
+
+	iSampleDrawGap = max(1, iSampleDrawGap);
+	iSampleDrawGap = min(iWndPixWidth, iSampleDrawGap);
+
+	#ifdef _DEBUG
+
+	if (bInternalUsed)
+	{
+		if (szDrawType != "DOT")
+		{
+			TCHAR szMsg[64];
+			wsprintf(szMsg, TEXT("%s%s"),
+				TEXT("[内部功能]：注意！\r\n"),
+				TEXT("当前绘图样式不为散点！\r\n")
+				TEXT("当前样式为：折线"));
+			MessageBox(pMain->GetHWND(), szMsg, szAppNameChn, MB_ICONWARNING);
+		}
+
+		if (iSampleDrawGap != 1)
+		{
+			TCHAR szMsg[64];
+			wsprintf(szMsg, TEXT("%s%s%d"),
+				TEXT("[内部功能]：注意！\r\n"),
+				TEXT("当前采样绘图间隔不为1！\r\n")
+				TEXT("当前值为："),
+				iSampleDrawGap);
+			MessageBox(pMain->GetHWND(), szMsg, szAppNameChn, MB_ICONWARNING);
+		}
+	}
+
+	#endif
 }
 
 void SaveConfig()
@@ -161,6 +202,11 @@ void SaveConfig()
 	cCfg.SetDouble("default", "dUpVal", dUpVal);
 	cCfg.SetDouble("default", "dDnVal", dDnVal);
 	cCfg.SetString("default", "szTypeSelect", szTypeSelect);
+
+	cCfg.SetBoolean("default", "bInternalUsed", bInternalUsed);
+
+	cCfg.SetString("default", "szDrawType", szDrawType);
+	cCfg.SetInteger("default", "iSampleDrawGap", iSampleDrawGap);
 
 	cCfg.SaveFile();
 }
@@ -185,7 +231,7 @@ void Redraw()
 	RECT rcRedraw;
 	HRGN hrgnAdd;
 
-	for (int i = 0; i < iWndPixWidth; i++)
+	for (int i = 0; i < (iWndPixWidth / iSampleDrawGap); i++)
 	{
 		double dValuePerPixel = (dUpVal - dDnVal) / iWndPixHeight;
 
@@ -197,9 +243,9 @@ void Redraw()
 		double dPosY = (dPosY1 + dPosY2) / 2;
 
 		SetRect(&rcRedraw,
-			(i - iDotSize / 2) - 1,
+			(i * iSampleDrawGap - iDotSize / 2) - 1,
 			(pdData[i] - iDotSize / 2) - 1,
-			(i + iDotSize / 2) + 1,
+			(i * iSampleDrawGap + iDotSize / 2) + 1,
 			(pdData[i] + iDotSize / 2) + 1);
 		hrgnAdd = CreateRectRgn(rcRedraw.left, rcRedraw.top, rcRedraw.right, rcRedraw.bottom);
 		CombineRgn(hrgnRedraw, hrgnRedraw, hrgnAdd, RGN_OR);
@@ -308,8 +354,8 @@ void ProcessNewRecv(BYTE * pbyData, DWORD dwDataBytes)
 
 				if (!bWaveformPause)
 				{
-					memcpy(pdData, (pdData + 1), (iWndPixWidth - 1) * sizeof(double));
-					pdData[iWndPixWidth - 1] = static_cast<double>(tByte.u.by);
+					memcpy(pdData, (pdData + 1), (iWndPixWidth / iSampleDrawGap - 1) * sizeof(double));
+					pdData[iWndPixWidth / iSampleDrawGap - 1] = static_cast<double>(tByte.u.by);
 				}
 			}
 			
@@ -326,8 +372,8 @@ void ProcessNewRecv(BYTE * pbyData, DWORD dwDataBytes)
 
 				if (!bWaveformPause)
 				{
-					memcpy(pdData, (pdData + 1), (iWndPixWidth - 1) * sizeof(double));
-					pdData[iWndPixWidth - 1] = static_cast<double>(tWord.u.wd);
+					memcpy(pdData, (pdData + 1), (iWndPixWidth / iSampleDrawGap - 1) * sizeof(double));
+					pdData[iWndPixWidth / iSampleDrawGap - 1] = static_cast<double>(tWord.u.wd);
 				}
 			}
 
@@ -344,8 +390,8 @@ void ProcessNewRecv(BYTE * pbyData, DWORD dwDataBytes)
 
 				if (!bWaveformPause)
 				{
-					memcpy(pdData, (pdData + 1), (iWndPixWidth - 1) * sizeof(double));
-					pdData[iWndPixWidth - 1] = static_cast<double>(tDword.u.dw);
+					memcpy(pdData, (pdData + 1), (iWndPixWidth / iSampleDrawGap - 1) * sizeof(double));
+					pdData[iWndPixWidth / iSampleDrawGap - 1] = static_cast<double>(tDword.u.dw);
 				}
 			}
 
@@ -362,8 +408,8 @@ void ProcessNewRecv(BYTE * pbyData, DWORD dwDataBytes)
 
 				if (!bWaveformPause)
 				{
-					memcpy(pdData, (pdData + 1), (iWndPixWidth - 1) * sizeof(double));
-					pdData[iWndPixWidth - 1] = static_cast<double>(tFloat.u.f);
+					memcpy(pdData, (pdData + 1), (iWndPixWidth / iSampleDrawGap - 1) * sizeof(double));
+					pdData[iWndPixWidth / iSampleDrawGap - 1] = static_cast<double>(tFloat.u.f);
 				}
 			}
 
@@ -380,8 +426,8 @@ void ProcessNewRecv(BYTE * pbyData, DWORD dwDataBytes)
 
 				if (!bWaveformPause)
 				{
-					memcpy(pdData, (pdData + 1), (iWndPixWidth - 1) * sizeof(double));
-					pdData[iWndPixWidth - 1] = static_cast<double>(tDouble.u.d);
+					memcpy(pdData, (pdData + 1), (iWndPixWidth / iSampleDrawGap - 1) * sizeof(double));
+					pdData[iWndPixWidth / iSampleDrawGap - 1] = static_cast<double>(tDouble.u.d);
 				}
 			}
 
@@ -400,6 +446,8 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 {
 	static char szStaticTextPosX [32] = { 0 }, szStaticTextPosY [32] = { 0 };
 	static char szStaticTextRealX[32] = { 0 }, szStaticTextRealY[32] = { 0 };
+
+	static int iMouseRBtnX = 0, iMouseRBtnY = 0;
 
 	switch (message)
 	{
@@ -433,7 +481,7 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 				HPEN hPen = GetStockPen(BLACK_PEN);
 				HPEN hOldPen = (HPEN)SelectObject(hdcBkgd, hPen);
 
-				for (int i = 0; i < iWndPixWidth; i++)
+				for (int i = 0; i < (iWndPixWidth / iSampleDrawGap); i++)
 				{
 					double dValuePerPixel = (dUpVal - dDnVal) / iWndPixHeight;
 
@@ -444,17 +492,31 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 
 					double dPosY = (dPosY1 + dPosY2) / 2;
 
-					if (iDotSize >= 2)
+					if (szDrawType == TEXT("DOT"))
 					{
-						Ellipse(hdcBkgd,
-							(int)(i     - iDotSize / 2),
-							(int)(dPosY - iDotSize / 2),
-							(int)(i     + iDotSize / 2),
-							(int)(dPosY + iDotSize / 2));
+						if (iDotSize >= 2)
+						{
+							Ellipse(hdcBkgd,
+								(int)(i * iSampleDrawGap - iDotSize / 2),
+								(int)(dPosY - iDotSize / 2),
+								(int)(i * iSampleDrawGap + iDotSize / 2),
+								(int)(dPosY + iDotSize / 2));
+						}
+						else
+						{
+							SetPixel(hdcBkgd, i * iSampleDrawGap, (int)dPosY, RGB(0, 0, 0));
+						}
 					}
-					else
+					else if (szDrawType == TEXT("LINE"))
 					{
-						SetPixel(hdcBkgd, i, (int)dPosY, RGB(0, 0, 0));
+						if (0 == i) // First point
+						{
+							MoveToEx(hdcBkgd, i * iSampleDrawGap, (int)dPosY, NULL);
+						}
+						else
+						{
+							LineTo(hdcBkgd, i * iSampleDrawGap, (int)dPosY);
+						}
 					}
 				}
 
@@ -484,7 +546,10 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 
 	case WM_WAVEFORMDISPLAY_RECVDATA:
 		ProcessNewRecv((PBYTE)wParam, (DWORD)lParam);
-		Redraw();
+		if (!bWaveformPause)
+		{
+			Redraw();
+		}
 		return 0;
 
 	case WM_MOUSEMOVE:
@@ -492,7 +557,7 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 		{
 			dMousePosX = GET_X_LPARAM(lParam);
 			dMousePosY = GET_Y_LPARAM(lParam);
-			dMouseRealX = dMousePosX;
+			dMouseRealX = dMousePosX / iSampleDrawGap;
 			dMouseRealY = dDnVal + (dUpVal - dDnVal) * (iWndPixHeight - dMousePosY) / iWndPixHeight;
 			
 			sprintf_s(szStaticTextPosX,  "%.*lf", PRECISION, dMousePosX);
@@ -516,22 +581,35 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 		return 0;
 
 	case WM_MOUSEWHEEL:
-		if ((GET_KEYSTATE_WPARAM(wParam) & MK_SHIFT) &&
-			(GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL))
+		if (GET_KEYSTATE_WPARAM(wParam) & MK_CONTROL)
 		{
 			int iScale = GET_WHEEL_DELTA_WPARAM(wParam) / WHEEL_DELTA;
-			if (iScale > 0) // Zoom out
+
+			if (GET_KEYSTATE_WPARAM(wParam) & MK_SHIFT)
 			{
-				double dDelta = (dUpVal - dDnVal) / 2;
-				dUpVal += dDelta;
-				dDnVal -= dDelta;
+				if (bInternalUsed)
+				{
+					iSampleDrawGap += iScale;
+					iSampleDrawGap = max(1, iSampleDrawGap);
+					iSampleDrawGap = min(iWndPixWidth, iSampleDrawGap);
+				}
 			}
-			else // Zoom in
+			else
 			{
-				double dDelta = (dUpVal - dDnVal) / 4;
-				dUpVal -= dDelta;
-				dDnVal += dDelta;
+				if (iScale > 0) // Zoom out
+				{
+					double dDelta = (dUpVal - dDnVal) / 2;
+					dUpVal += dDelta;
+					dDnVal -= dDelta;
+				}
+				else // Zoom in
+				{
+					double dDelta = (dUpVal - dDnVal) / 4;
+					dUpVal -= dDelta;
+					dDnVal += dDelta;
+				}
 			}
+
 			SaveConfig();
 
 			bMouseSelect = false;
@@ -539,6 +617,35 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 		}
 		return 0;
 
+	case WM_RBUTTONDOWN:
+		iMouseRBtnX = GET_X_LPARAM(lParam);
+		iMouseRBtnY = GET_Y_LPARAM(lParam);
+		return 0;
+
+	case WM_RBUTTONUP:
+		if (wParam & MK_CONTROL)
+		{
+			int iMouseRBtnCrntX = GET_X_LPARAM(lParam);
+			int iMouseRBtnCrntY = GET_Y_LPARAM(lParam);
+
+			double dOffset = iMouseRBtnCrntY - iMouseRBtnY;
+			dOffset = dOffset * ((dUpVal - dDnVal) / iWndPixHeight);
+			dUpVal += dOffset;
+			dDnVal += dOffset;
+
+			Redraw();
+		}
+		iMouseRBtnX = 0;
+		iMouseRBtnY = 0;
+		return 0;
+
+	case WM_CHAR:
+		if (wParam == VK_SPACE)
+		{
+			bWaveformPause = !bWaveformPause;
+			SetDlgItemText(hdlgValue, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("截停显示"));
+		}
+		return 0;
 
 	case WM_TIMER:
 
@@ -549,6 +656,7 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 			Redraw();
 			return 0;
 			#endif
+			break;
 		}
 
 		break;
@@ -724,8 +832,8 @@ bool WaveformDisplay(Common::CComWnd * pParent)
 		{
 			delete [] pdData;
 		}
-		pdData = new double [iWndPixWidth];
-		for (int i = 0; i < iWndPixWidth; i++)
+		pdData = new double [iWndPixWidth / iSampleDrawGap];
+		for (int i = 0; i < iWndPixWidth / iSampleDrawGap; i++)
 		{
 			pdData[i] = (dUpVal + dDnVal) / 2;
 		}

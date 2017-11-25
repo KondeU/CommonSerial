@@ -41,7 +41,7 @@ BEGIN
     CONTROL         "",IDC_CHK_AUTO_SEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,222,12,10
     PUSHBUTTON      "复制接收数据",IDC_BTN_COPY_RECV,78,132,61,16
     PUSHBUTTON      "清空接收数据",IDC_BTN_CLR_RECV,140,132,61,16
-    PUSHBUTTON      "暂停显示(&D)",IDC_BTN_STOPDISP,202,132,61,16
+    PUSHBUTTON      "暂停显示(&D)",IDC_BTN_STOPDISP,202,132,61,16,WS_DISABLED
     PUSHBUTTON      "保存到文件",IDC_BTN_SAVEFILE,264,132,61,16
     PUSHBUTTON      "工具箱",IDC_BTN_HELP,329,132,31,16,BS_MULTILINE
     EDITTEXT        IDC_EDIT_SEND,82,154,276,78,ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL | ES_WANTRETURN | WS_VSCROLL
@@ -146,13 +146,13 @@ BEGIN
     COMBOBOX        IDC_COMBO_INPUTSELECT,197,68,65,12,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 END
 
-IDD_DIALOG_WAVEFORM_VALUE DIALOGEX 0, 0, 201, 104
+IDD_DIALOG_WAVEFORM_VALUE DIALOGEX 0, 0, 201, 77
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
 CAPTION "波形绘制功能当前鼠标位置"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    PUSHBUTTON      "释放鼠标",IDCANCEL,75,83,50,14
-    DEFPUSHBUTTON   "暂停/继续",IDOK,7,83,50,14
+    PUSHBUTTON      "释放鼠标",IDCANCEL,75,56,50,14
+    DEFPUSHBUTTON   "暂停/继续",IDOK,7,56,50,14
     GROUPBOX        "鼠标位置",IDC_STATIC,7,7,89,44
     LTEXT           "X：",IDC_STATIC,16,20,17,8
     LTEXT           "PosX",IDC_STATIC_POSX,35,20,51,8
@@ -163,8 +163,7 @@ BEGIN
     LTEXT           "RealX",IDC_STATIC_REALX,133,20,51,8
     LTEXT           "Y：",IDC_STATIC,114,35,17,8
     LTEXT           "RealY",IDC_STATIC_REALY,133,35,51,8
-    CTEXT           "1.方向：X，横向向右；Y，纵向向下。\n2.CTRL+鼠标左键锁定/解锁当前位置。\n3.CTRL+SHIFT+鼠标滚轮缩放Y坐标轴。",IDC_STATIC,19,55,162,26
-    PUSHBUTTON      "设置",IDC_BTN_WDSETTING,144,83,50,14
+    PUSHBUTTON      "设置",IDC_BTN_WDSETTING,144,56,50,14
 END
 
 
@@ -217,7 +216,7 @@ BEGIN
         BLOCK "080404b0"
         BEGIN
             VALUE "CompanyName", "KondeU"
-            VALUE "FileDescription", "CommonSerial串口调试助手"
+            VALUE "FileDescription", "CommonSerial串口通信调试助手"
             VALUE "FileVersion", "2.1.0.0"
             VALUE "InternalName", "common"
             VALUE "LegalCopyright", "CommonSerial Copyright (C) 2017 KondeU"
@@ -269,8 +268,8 @@ IDR_MENU_MORE MENU
 BEGIN
     POPUP "popupmenu"
     BEGIN
-        MENUITEM "超时设置(&T)",                    MENU_MORE_TIMEOUTS
-        MENUITEM "驱动提供的设置(&D)",                 MENU_MORE_DRIVER
+        MENUITEM "超时设置(&T)",                    MENU_MORE_TIMEOUTS, GRAYED
+        MENUITEM "驱动提供的设置(&D)",                 MENU_MORE_DRIVER, GRAYED
         MENUITEM "DTR/RTS引脚电平控制(&P)",           MENU_MORE_PINCTRL
     END
 END
@@ -360,7 +359,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 194
         TOPMARGIN, 7
-        BOTTOMMARGIN, 97
+        BOTTOMMARGIN, 70
     END
 END
 #endif    // APSTUDIO_INVOKED
