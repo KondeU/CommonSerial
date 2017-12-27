@@ -1,3 +1,18 @@
+/************************************************************
+
+GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
+Copyright (c) 2017, KondeU, All rights reserved.
+
+Project:     CommonSerial
+File:        WaveformDisplay.cpp
+Description: Add functions to original common.
+Date:        2017-11-22
+Version:     2.01
+Authors:     Deyou Kong <370242479@qq.com>
+History:     01, 17-11-22, Deyou Kong, Create file and implement it.
+
+************************************************************/
+
 #include "StdAfx.h"
 #include "../res/resource.h"
 #include "AdditionFuncs/CConfig.h"
@@ -226,7 +241,7 @@ int JudgeType(string sz)
 
 void Redraw()
 {
-	HRGN hrgnRedraw = CreateRectRgn(0, 0, 1, 1);
+	/*HRGN hrgnRedraw = CreateRectRgn(0, 0, 1, 1);
 
 	RECT rcRedraw;
 	HRGN hrgnAdd;
@@ -260,14 +275,14 @@ void Redraw()
 	SetRect(&rcRedraw, dMousePosX - 1, 0, dMousePosX + 1, iWndPixHeight);
 	hrgnAdd = CreateRectRgn(rcRedraw.left, rcRedraw.top, rcRedraw.right, rcRedraw.bottom);
 	CombineRgn(hrgnRedraw, hrgnRedraw, hrgnAdd, RGN_OR);
-	DeleteRgn(hrgnAdd);
+	DeleteRgn(hrgnAdd);*/
 
 	//InvalidateRgn(hwndDraw, hrgnRedraw, TRUE);
 	InvalidateRect(hwndDraw, NULL, TRUE);
 
 	UpdateWindow(hwndDraw);
 
-	DeleteRgn(hrgnRedraw);
+	/*DeleteRgn(hrgnRedraw);*/
 }
 
 void ProcessNewRecv(BYTE * pbyData, DWORD dwDataBytes)
