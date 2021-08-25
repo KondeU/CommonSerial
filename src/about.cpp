@@ -1,21 +1,20 @@
 #include "StdAfx.h"
 #include "../res/resource.h"
 
-#pragma comment(lib,"WinInet")
+#include "about.h"
 
-static char* __THIS_FILE__ = __FILE__;
+#pragma comment(lib,"WinInet")
 
 const char* Common::c_about_dlg::about_str = 
 	"软件信息：\r\n"
 	"因程序涉及串口硬件操作，有可能会被杀毒软件误报威胁，请添加信任使用。\r\n"
 	"本应用程序为免费软件，不收取任何费用，在使用过程中如有疑问或报告异常，可发邮件至用户反馈邮箱。\r\n"
-	//"版本号：2.01 内部测试版本\r\n"
-	"版本号：2.01 发布版本\r\n"
+	"版本号：2.02 发布版本\r\n"
 	"字符集：ANSI字符\r\n"
 	"编译平台：Visual Studio 2015\r\n"
 	"用户反馈：370242479@qq.com\r\n"
-	"历史开发者：女孩不哭（http://blog.twofei.com/566/）\r\n"
-	"当前维护者：KondeU（http://github.com/KondeU）\r\n"
+	"开发者(v1)：女孩不哭（http://blog.twofei.com/566/）\r\n"
+	"开发者(v2)：KondeU（http://github.com/KondeU）\r\n"
 	"-----------------------------------------------------\r\n"
 	"软件说明:\r\n"
 	"    1.软件用C/C++语言+Win32API方式编写，程序高效简洁，不会产生任何系统附属文件。\r\n"
@@ -209,6 +208,9 @@ const char* Common::c_about_dlg::about_str =
     "2017-11-17: 2.01 获得授权，接着原作者的代码继续维护，新主版本号\r\n"
 	"    原开发中含有但实际没有实现或已移除的功能有：超时设置、驱动提供的设置、主接收窗口暂停显示、形状绘制、串口驱动过滤、字符串转16进制、检查软件新版本。\r\n"
     "    修改了部分代码及图标，增添了波形绘制的功能。\r\n"
+    "-----------------------------------------------------\r\n"
+    "(2021-08-26)[2015-12-28]: v1版本上有更新，同步更新到v2\r\n"
+    "    fix issue: 增加DTR/RTS引脚电平控制\r\n"
 	"\r\n\r\n"
 	;
 
@@ -279,8 +281,6 @@ R"(
 		auto& name = ctrl->GetName();
 		if (name == "btn_website"){
 			if (code == BN_CLICKED){
-				//char* web = "http://blog.twofei.com/566/";
-				//ShellExecute(NULL, "open", web, NULL, NULL, SW_SHOWNORMAL);
 				return 0;
 			}
 		}

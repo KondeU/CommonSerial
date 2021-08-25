@@ -1,6 +1,6 @@
 #include "StdAfx.h"
 
-static char* __THIS_FILE__ = __FILE__;
+#include "asctable.h"
 
 /**********************************************************
 文件名称:asctable.c
@@ -65,8 +65,8 @@ static COLORREF cr_table[] ={
 namespace Common{
 	int c_asctable_dlg::axisx = -1;
 	int c_asctable_dlg::axisy = -1;
-	int c_asctable_dlg::_fgcolor = 6;//0;
-	int c_asctable_dlg::_bgcolor = 7;//6;
+	int c_asctable_dlg::_fgcolor = 0;
+	int c_asctable_dlg::_bgcolor = 6;
 
 	LRESULT c_asctable_dlg::handle_message(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
 	{
@@ -75,14 +75,14 @@ namespace Common{
 		case WM_ERASEBKGND:
 			return TRUE;
 
-		//case WM_LBUTTONDOWN:
-		//	_fgcolor = (++_fgcolor) % __ARRAY_SIZE(cr_table);
-		//	::InvalidateRect(m_hWnd, NULL, TRUE);
-		//	return 0;
-		//case WM_RBUTTONDOWN:
-		//	_bgcolor = (++_bgcolor) % __ARRAY_SIZE(cr_table);
-		//	::InvalidateRect(m_hWnd, NULL, TRUE);
-		//	return 0;
+		case WM_LBUTTONDOWN:
+			_fgcolor = (++_fgcolor) % _countof(cr_table);
+			::InvalidateRect(m_hWnd, NULL, TRUE);
+			return 0;
+		case WM_RBUTTONDOWN:
+			_bgcolor = (++_bgcolor) % _countof(cr_table);
+			::InvalidateRect(m_hWnd, NULL, TRUE);
+			return 0;
 		case WM_PAINT:
 			{
 				PAINTSTRUCT ps;
@@ -114,8 +114,7 @@ namespace Common{
 				SetBkMode(hdc,TRANSPARENT);
 				SetTextColor(hdc,cr_table[_fgcolor]);
 
-				//len=sprintf(str,"%4s %4s  %4s  %s","十","八","十六","描述");
-				len = sprintf(str, "%4s %4s  %4s  %s", "DEC", "OCT", "HEX", "Description");
+				len=sprintf(str,"%4s %4s  %4s  %s","十","八","十六","描述");
 				TextOut(hdc,x,y,str,len);
 				y += ASC_FONT_HEIGHT+ASC_TEXT_ASCENT;
 				len=sprintf(str,"----------------------------------------");
@@ -204,8 +203,7 @@ namespace Common{
 			}
 		case WM_INITDIALOG:
 			{
-				//::SetWindowText(m_hWnd, "ASCII码表: 左键: 前景色, 右键: 背景色");
-				SetWindowText(m_hWnd, "ASCII码表");
+				::SetWindowText(m_hWnd, "ASCII码表: 左键: 前景色, 右键: 背景色");
 				SCROLLINFO si;
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_ALL;

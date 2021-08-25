@@ -2,15 +2,12 @@
 
 namespace Common{
 
-//#define COMMON_NAME			"Com Monitor"
-//#define COMMON_VERSION		"1.20"
 #define COMMON_NAME			"CommonSerial"
-#define COMMON_VERSION		"2.01"
+#define COMMON_VERSION		"2.02"
 
 #ifdef _DEBUG 
 	#define COMMON_NAME_AND_VERSION COMMON_NAME " " COMMON_VERSION " - Debug Mode"
 #else
-	//#define COMMON_NAME_AND_VERSION COMMON_NAME " " COMMON_VERSION " "
 	#define COMMON_NAME_AND_VERSION COMMON_NAME " " COMMON_VERSION " - Release"
 #endif
 

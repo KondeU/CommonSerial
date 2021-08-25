@@ -2,10 +2,55 @@
 
 #include "../res/resource.h"
 
-
-static char* __THIS_FILE__  = __FILE__;
+#include "about.h"
+#include "asctable.h"
+#include "msg.h"
 
 namespace Common {
+	//////////////////////////////////////////////////////////////////////////
+	std::string CComWnd::c_comport::get_id_and_name() const
+	{
+		char idstr[17] = {0};
+		_snprintf(idstr, sizeof(idstr), "COM%-13d", _i);
+		std::stringstream ss;
+		ss << idstr << "\t\t" << _s;
+		return std::string(ss.str());
+	}
+
+	//////////////////////////////////////////////////////////////////////////
+	CComWnd::i_com_list* CComWnd::c_comport_list::update_list()
+	{
+		HDEVINFO hDevInfo = INVALID_HANDLE_VALUE;
+		SP_DEVINFO_DATA spdata = {0};
+		GUID guid = GUID_DEVINTERFACE_COMPORT;
+
+		empty();
+
+		hDevInfo = SetupDiGetClassDevs(&guid, 0, 0, DIGCF_PRESENT|DIGCF_DEVICEINTERFACE);
+		if(hDevInfo == INVALID_HANDLE_VALUE){
+			return this;
+		}
+
+		spdata.cbSize = sizeof(spdata);
+		for(int i=0; SetupDiEnumDeviceInfo(hDevInfo, i, &spdata); i++){
+			char buff[1024] = {0};
+			if(SetupDiGetDeviceRegistryProperty(hDevInfo, &spdata, SPDRP_FRIENDLYNAME, NULL, 
+				PBYTE(buff), _countof(buff), NULL))
+			{
+				// Prolific com port (COMxx)
+				char* p = strstr(buff, "(COM");
+				if(p){
+					int id = atoi(p + 4);
+					if(p != buff) *(p-1) = '\0';
+					add(c_comport(id, buff));
+				}
+			}
+		}
+		SetupDiDestroyDeviceInfoList(hDevInfo);
+
+		return this;
+	}
+
 	//////////////////////////////////////////////////////////////////////////
 	CComWnd::CComWnd()
 		: m_layout(0)
@@ -57,8 +102,6 @@ namespace Common {
 	{
 		SetWindowText(hWnd, COMMON_NAME_AND_VERSION);
 
-		memory.set_notifier(this);
-
 		struct {HWND* phwnd; UINT  id;}hwndlist[] = {
 				{&_hCP,		IDC_CBO_CP},
 				{&_hBR,		IDC_CBO_BR},
@@ -73,6 +116,26 @@ namespace Common {
 			SMART_ENSURE(*hwndlist[i].phwnd = ::GetDlgItem(m_hWnd, hwndlist[i].id), !=NULL)(i).Fatal();
 		}
 
+		static char* aBaudRate[]={"110","300","600","1200","2400","4800","9600","14400","19200","38400","57600","115200","128000","256000", NULL};
+		static DWORD iBaudRate[]={CBR_110,CBR_300,CBR_600,CBR_1200,CBR_2400,CBR_4800,CBR_9600,CBR_14400,CBR_19200,CBR_38400,CBR_57600,CBR_115200,CBR_128000,CBR_256000};
+		static char* aParity[] = {"无","奇校验","偶校验", "标记", "空格", NULL};
+		static BYTE iParity[] = { NOPARITY, ODDPARITY,EVENPARITY, MARKPARITY, SPACEPARITY };
+		static char* aStopBit[] = {"1位", "1.5位","2位", NULL};
+		static BYTE iStopBit[] = {ONESTOPBIT,ONE5STOPBITS,TWOSTOPBITS};
+		static char* aDataSize[] = {"8位","7位","6位","5位",NULL};
+		static BYTE iDataSize[] = {8,7,6,5};
+
+		for(int i=0; aBaudRate[i]; i++)
+			_baudrate_list.add(c_baudrate(iBaudRate[i],aBaudRate[i], true));
+		for(int i=0; aParity[i]; i++)
+			_parity_list.add(t_com_item(iParity[i],aParity[i]));
+		for(int i=0; aStopBit[i]; i++)
+			_stopbit_list.add(t_com_item(iStopBit[i], aStopBit[i]));
+		for(int i=0; aDataSize[i]; i++)
+			_databit_list.add(t_com_item(iDataSize[i], aDataSize[i]));
+
+
+
 		editor_recv_char()->Create(hWnd, "", WS_CHILD | WS_VISIBLE | WS_HSCROLL | WS_VSCROLL | ES_READONLY |
 			ES_MULTILINE | ES_WANTRETURN | ES_AUTOHSCROLL | ES_AUTOVSCROLL ,
 			WS_EX_CLIENTEDGE,
@@ -84,9 +147,9 @@ namespace Common {
 		editor_recv_hex()->Attach(::GetDlgItem(hWnd, IDC_EDIT_RECV));
 		editor_send()->Attach(::GetDlgItem(hWnd, IDC_EDIT_SEND));
 
-		editor_recv_hex()->limit_text(COMMON_RECV_BUF_SIZE);
-		editor_recv_char()->limit_text(COMMON_RECV_BUF_SIZE);
-		editor_send()->limit_text(COMMON_SEND_BUF_SIZE);
+		editor_recv_hex()->limit_text(-1);
+		editor_recv_char()->limit_text(-1);
+		editor_send()->limit_text(-1);
 
 		SendMessage(WM_SETICON, ICON_SMALL, LPARAM(LoadIcon(hInstance, MAKEINTRESOURCE(IDI_ICON1))));
 
@@ -98,8 +161,7 @@ namespace Common {
 		layout_resize(m_layout, NULL);
 
 		// 界面元素
-		//::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 350, 0);
-		::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 260, 0);
+		::SendMessage(_hCP, CB_SETDROPPEDWIDTH, 350, 0);
 		::SetDlgItemText(m_hWnd, IDC_STATIC_TIMER, "00:00:00");
 		
 		// 界面预定义
@@ -123,6 +185,8 @@ namespace Common {
 			if (_comm.is_opened()){
 				com_try_close(true);
 				_timer.stop();
+                if(_auto_send_timer.is_running())
+                    _auto_send_timer.stop();
 			}
 			return false;
 		});
@@ -336,11 +400,11 @@ namespace Common {
 			i_com_list* plist;
 			HWND hwnd;
 		} ups[] = {
-			{list_callback_ud::e_type::cp, _comm.comports()->update_list() , _hCP},
-			{list_callback_ud::e_type::br, _comm.baudrates()->update_list() , _hBR},
-			{list_callback_ud::e_type::pa, _comm.parities()->update_list() , _hPA},
-			{list_callback_ud::e_type::sb, _comm.stopbits()->update_list() , _hSB},
-			{list_callback_ud::e_type::db, _comm.databits()->update_list() , _hDB},
+			{list_callback_ud::e_type::cp, _comport_list.update_list() , _hCP},
+			{list_callback_ud::e_type::br, _baudrate_list.update_list() , _hBR},
+			{list_callback_ud::e_type::pa, _parity_list.update_list() , _hPA},
+			{list_callback_ud::e_type::sb, _stopbit_list.update_list() , _hSB},
+			{list_callback_ud::e_type::db, _databit_list.update_list() , _hDB},
 		};
 
 		for(int i=0; i<sizeof(ups)/sizeof(*ups); i++){
@@ -401,7 +465,7 @@ namespace Common {
 
 	void CComWnd::com_update_comport_list()
 	{
-		i_com_list* list = _comm.comports()->update_list();
+		i_com_list* list = _comport_list.update_list();
 		list_callback_ud ud;
 		ud.that = this;
 		ud.type = list_callback_ud::e_type::cp;
@@ -419,21 +483,14 @@ namespace Common {
 		{
 		// 工具箱/帮助菜单
 		case MENU_OTHER_HELP:		(new c_about_dlg)->do_modal(*this); break;
+		//case MENU_OTHER_STR2HEX:	(new c_str2hex_dlg)->do_modeless(this); break;
 		case MENU_OTHER_ASCII:		(new c_asctable_dlg)->do_modeless(*this);break;
 		case MENU_OTHER_CALC:		::ShellExecute(m_hWnd, "open", "calc", NULL, NULL, SW_SHOWNORMAL);	break;
 		case MENU_OTHER_NOTEPAD:	::ShellExecute(m_hWnd, "open", "notepad", NULL, NULL, SW_SHOWNORMAL); break;
 		case MENU_OTHER_DEVICEMGR:	::ShellExecute(m_hWnd, "open", "devmgmt.msc", NULL, NULL, SW_SHOWNORMAL); break;
 
-		case MENU_OTHER_DRAW: // Addition Funcs of waveform display
-		{
-			#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
-			WaveformDisplay(this);
-		}
-		break;
-
 		case MENU_OTHER_MONITOR:
-		//case MENU_OTHER_STR2HEX:	(new c_str2hex_dlg)->do_modeless(*this); break;
-		case MENU_OTHER_STR2HEX:
+		case MENU_OTHER_DRAW:
 			msgbox(MB_ICONINFORMATION,0,"not implemented!"); break;
 		case MENU_OTHER_NEWVERSION:break;
 
@@ -509,21 +566,18 @@ namespace Common {
 			msgbox(MB_ICONINFORMATION, dlg.get_buffer(), "文件已成功保存。\n文件大小: %d", size);
 			return 0;
 		}
-
 		case IDC_BTN_SEND:
 			if (code == BN_CLICKED){
 				com_do_send(false);
 				return 0;
 			}
 			break;
-
 		case IDC_BTN_OPEN:
 			if (code == BN_CLICKED){
 				com_openclose();
 				return 0;
 			}
 			break;
-
 		case IDC_BTN_MORE_SETTINGS:
 			if (code == BN_CLICKED){
 				POINT pt;
@@ -534,7 +588,6 @@ namespace Common {
 				return 0;
 			}
 			break;
-
 		case IDC_CBO_CP:
 			// todo: buggy, multi times update
 			if (code == CBN_SELENDOK || code == CBN_SELENDCANCEL){
@@ -547,7 +600,6 @@ namespace Common {
 				}
 			}
 			break;
-
 		case IDC_CBO_BR:
 			if (code == CBN_SELENDOK){
 				int index = ComboBox_GetCurSel(_hBR);
@@ -597,7 +649,7 @@ namespace Common {
 					if (brinput.get_dlg_code() == IDOK){
 						int br = brinput.get_int_value();
 						std::string s = brinput.get_string_value();
-						const c_baudrate& item = _comm.baudrates()->add(c_baudrate(br, s.c_str(), false));
+						const c_baudrate& item = _baudrate_list.add(c_baudrate(br, s.c_str(), false));
 						index = ComboBox_InsertString(_hBR, index, s.c_str());
 						ComboBox_SetItemData(_hBR, index, &item);
 						ComboBox_SetCurSel(_hBR, index);
@@ -609,7 +661,6 @@ namespace Common {
 				}
 			}
 			break;
-
 		case IDC_RADIO_SEND_CHAR:
 		case IDC_RADIO_SEND_HEX:
 			if (code == BN_CLICKED){
@@ -617,7 +668,6 @@ namespace Common {
 				return 0;
 			}
 			break;
-
 		case IDC_RADIO_RECV_CHAR:
 		case IDC_RADIO_RECV_HEX:
 			if (code == BN_CLICKED){
@@ -625,7 +675,6 @@ namespace Common {
 				return 0;
 			}
 			break;
-
 		case IDC_BTN_SEND_FMT_CONFIG:
 			if (code == BN_CLICKED){
 				bool bchar = is_send_data_format_char();
@@ -635,11 +684,9 @@ namespace Common {
 				return 0;
 			}
 			break;
-
 		case IDC_CHK_AUTO_SEND:
 			switch_auto_send();
 			return 0;
-
 		// 接收数据中间的按钮
 		case IDC_BTN_HELP:
 			if(code==BN_CLICKED){
@@ -651,7 +698,6 @@ namespace Common {
 				return 0;
 			}
 			break;
-
 		// 发送数据按钮
 		case IDC_BTN_CLR_COUNTER:
 			if(code==BN_CLICKED){
@@ -699,12 +745,6 @@ namespace Common {
 				return 0;
 			}
 			break;
-
-		// 停止接收框显示
-		//case IDACC_STOPDISP:
-			//editor_recv_hex()->append_text
-			//break;
-
 		// 置顶 && 简洁模式
 		case IDC_CHK_TOP:
 			if (code == BN_CLICKED){
@@ -760,7 +800,7 @@ namespace Common {
 		int cursel = ComboBox_GetCurSel(_hCP);
 		t_com_item* pi = (t_com_item*)(cursel == -1 ? 0 : ComboBox_GetItemData(_hCP,cursel));
 		if (!pi){
-			msgbox(MB_ICONEXCLAMATION, NULL, "没有可用的串口, 请点击串口列表刷新！");
+			msgbox(MB_ICONEXCLAMATION, NULL, "没有可用的串口, 请点击串口列表刷新!");
 			return false;
 		}
 
@@ -773,7 +813,7 @@ namespace Common {
 		if (count == 0){
 			ComboBox_InsertString(_hCP, -1, "<没有找到任何可用的串口！点击刷新列表！>");
 			ComboBox_SetItemData(_hCP, 0, 0);
-			update_status("没有找到可用的串口！");
+			update_status("没有找到可用的串口!");
 		}
 		else{
 			update_status("共找到 %d 个串口设备!", count);
@@ -981,20 +1021,17 @@ namespace Common {
 			switch_send_data_format(true, false);
 		}
 		else if (selected == "any"){
+            const int line_cch = 16;
 			int length = file_size;
-			char* hexstr = c_text_formatting::hex2str(
-				buffer, &length, COMMON_LINE_CCH_SEND, 0, NULL, 0, c_text_formatting::newline_type::NLT_CRLF);
-			if (hexstr){
-				editor_send()->set_text(hexstr);
-				switch_send_data_format(true, true);
-				memory.free((void**)&hexstr, "");
-				switch_send_data_format(true, true);
-			}
+			char* hexstr = c_text_formatting::hex2str(buffer, &length, line_cch, 0, NULL, 0, c_text_formatting::newline_type::NLT_CRLF);
+            editor_send()->set_text(hexstr);
+            delete[] hexstr;
+            switch_send_data_format(true, true);
 		}
 		else if (selected == "cmd"){
 			bf.close();
 			delete[] buffer;
-			sendcmd_try_load_xml(*this, bf.get_fn().c_str(), &_comm);
+			// sendcmd_try_load_xml(*this, bf.get_fn().c_str(), &_comm);
 			return; // !!!
 		}
 
@@ -1272,7 +1309,7 @@ namespace Common {
 
 		// 串口参数配置
 		if (auto item = comcfg->get_key("comm.config.comport")){
-			auto& cp = *_comm.comports();
+			auto& cp = _comport_list;
 			if (cp.size()){
 				for (int i = 0; i < cp.size(); i++){
 					if (item->get_int() == cp[i].get_i()){
@@ -1287,7 +1324,7 @@ namespace Common {
 			split_string(&brs, item->val().c_str(), '|');
 			if (brs.size() > 1){
 				for (int i = 0; i < (int)brs.size() - 1; i++){
-					auto& b = _comm.baudrates()->add(c_baudrate(atoi(brs[i].c_str()), brs[i].c_str(), false));
+					auto& b = _baudrate_list.add(c_baudrate(atoi(brs[i].c_str()), brs[i].c_str(), false));
 					int idx = ComboBox_InsertString(_hBR, ComboBox_GetCount(_hBR)-1, brs[i].c_str());
 					ComboBox_SetItemData(_hBR, idx, &b);
 				}
@@ -1295,9 +1332,9 @@ namespace Common {
 
 			if (brs.size() > 0){
 				int index = -1;
-				auto li = _comm.baudrates();
-				for (int i = 0; i < li->size(); i++){
-					if (brs[brs.size()-1] == (*li)[i].get_s()){
+				auto li = _baudrate_list;
+				for (int i = 0; i < li.size(); i++){
+					if (brs[brs.size()-1] == li[i].get_s()){
 						index = i;
 						break;
 					}
@@ -1309,9 +1346,9 @@ namespace Common {
 		}
 		if (auto item = comcfg->get_key("comm.config.parity")){
 			int index = -1;
-			auto li = _comm.parities();
-			for (int i = 0; i < li->size(); i++){
-				if (item->get_int() == (*li)[i].get_i()){
+			auto li = _parity_list;
+			for (int i = 0; i < li.size(); i++){
+				if (item->get_int() == li[i].get_i()){
 					index = i;
 					break;
 				}
@@ -1322,9 +1359,9 @@ namespace Common {
 		}
 		if (auto item = comcfg->get_key("comm.config.databit")){
 			int index = -1;
-			auto li = _comm.databits();
-			for (int i = 0; i < li->size(); i++){
-				if (item->get_int() == (*li)[i].get_i()){
+			auto li = _databit_list;
+			for (int i = 0; i < li.size(); i++){
+				if (item->get_int() == li[i].get_i()){
 					index = i;
 					break;
 				}
@@ -1335,9 +1372,9 @@ namespace Common {
 		}
 		if (auto item = comcfg->get_key("comm.config.stopbit")){
 			int index = -1;
-			auto li = _comm.stopbits();
-			for (int i = 0; i < li->size(); i++){
-				if (item->get_int() == (*li)[i].get_i()){
+			auto li = _stopbit_list;
+			for (int i = 0; i < li.size(); i++){
+				if (item->get_int() == li[i].get_i()){
 					index = i;
 					break;
 				}
@@ -1398,7 +1435,7 @@ namespace Common {
 		}
 
 		// 当前波特率
-		auto& brs = *_comm.baudrates();
+		auto& brs = _baudrate_list;
 		std::string user_baudrates;
 		for (int i = 0; i < brs.size(); i++){
 			if (brs[i].is_added_by_user()){
@@ -1488,7 +1525,7 @@ namespace Common {
 								<Static text="常说的二进制文件(直接打开有乱码), 将以16进制序列方式显示!" font="1" inset="20,0,0,0"/>
 								<Option name="hexseq" text="包含16进制序列的文本文件"/>
 								<Static text="两个字符一组的16进制序列文件, 比如: 12 AB FF" font="1" inset="20,0,0,0"/>
-								<Option name="cmd" text="命令列表文件"/>
+								<Option name="cmd" text="命令列表文件" style="disabled"/>
 								<Static text="包含在文本文件中的命令列表索引!" font="1" inset="20,0,0,0"/>
 								<Option name="nothing" text="取消" />
 							</Vertical>

@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "../res/resource.h"
 
-static char* __THIS_FILE__ = __FILE__;
+#include "msg.h"
 
 Common::CComConfig* comcfg;
 
 void com_load_config(void)
 {
 	char mp[MAX_PATH]={0};
-	GetModuleFileName(NULL, mp, __ARRAY_SIZE(mp));
-	strcpy(strrchr(mp, '\\')+1, "Common.cfg");
+	GetModuleFileName(NULL, mp, _countof(mp));
+	strcpy(strrchr(mp, '\\')+1, "common.ini");
 	comcfg = new Common::CComConfig;
 	comcfg->LoadFile(mp);
 }
@@ -26,6 +26,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 {
 	//InitCommonControls();
 	LoadLibrary("RichEd20.dll");
+
+    std::set_new_handler([]() {});
 
 #ifdef _DEBUG
 	AllocConsole();
@@ -51,6 +53,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPSTR lpCmdLine
 	Sleep(500);
 	FreeConsole();
 #endif
-	//MessageBeep(MB_OK);
+	MessageBeep(MB_OK);
 	return 0;
 }
+
