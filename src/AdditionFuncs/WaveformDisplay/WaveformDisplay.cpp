@@ -1,13 +1,13 @@
 /************************************************************
 
-GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007
 Copyright (c) 2017, KondeU, All rights reserved.
+BSD 2-Clause License
 
 Project:     CommonSerial
 File:        WaveformDisplay.cpp
 Description: Add functions to original common.
 Date:        2017-11-22
-Version:     2.01
+Version:     2.02
 Authors:     Deyou Kong <370242479@qq.com>
 History:     01, 17-11-22, Deyou Kong, Create file and implement it.
 
@@ -658,7 +658,7 @@ LRESULT CALLBACK WndProcWaveformDisplay(HWND hwnd, UINT message, WPARAM wParam, 
 		if (wParam == VK_SPACE)
 		{
 			bWaveformPause = !bWaveformPause;
-			SetDlgItemText(hdlgValue, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("截停显示"));
+			SetDlgItemText(hdlgValue, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("暂停显示"));
 		}
 		return 0;
 
@@ -708,7 +708,7 @@ BOOL CALLBACK DlgProcWaveformValue(HWND hdlg, UINT message, WPARAM wParam, LPARA
 		SetDlgItemTextA(hdlg, IDC_STATIC_POSY,   szStaticTextPosY);
 		SetDlgItemTextA(hdlg, IDC_STATIC_REALX, szStaticTextRealX);
 		SetDlgItemTextA(hdlg, IDC_STATIC_REALY, szStaticTextRealY);
-		SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("截停显示"));
+		SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("暂停显示"));
 		return TRUE;
 
 	case WM_COMMAND:
@@ -716,7 +716,7 @@ BOOL CALLBACK DlgProcWaveformValue(HWND hdlg, UINT message, WPARAM wParam, LPARA
 		{
 		case IDOK: // Pause/Continue
 			bWaveformPause = !bWaveformPause;
-			SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("截停显示"));
+			SetDlgItemText(hdlg, IDOK, bWaveformPause ? TEXT("继续显示") : TEXT("暂停显示"));
 			return TRUE;
 
 		case IDCANCEL: // Rlease mouse select
