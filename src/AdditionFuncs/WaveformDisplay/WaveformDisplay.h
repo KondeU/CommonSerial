@@ -17,5 +17,7 @@ History:     01, 17-11-22, Deyou Kong, Create file and implement it.
 
 #include <Windows.h>
 
+#include "msg.h"
+
 bool WaveformDisplay(Common::CComWnd * pParent);
 void WDReceiveData(BYTE * pbyData, DWORD dwDataBytes);

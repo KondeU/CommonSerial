@@ -6,6 +6,8 @@
 #include "asctable.h"
 #include "msg.h"
 
+#include "pinctrl.h"
+
 #include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
 
 namespace Common {
@@ -511,7 +513,6 @@ namespace Common {
 
         case MENU_MORE_PINCTRL:
         {
-            #include "pinctrl.h"
             show_pinctrl(m_hWnd, [&]() {return _comm.get_handle(); });
             return 0;
         }
