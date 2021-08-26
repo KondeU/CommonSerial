@@ -3,6 +3,8 @@
 #include "comm.h"
 #include "data.h"
 
+#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
+
 namespace Common{
 	CComm::CComm()
 		: _notifier(NULL)
@@ -439,11 +441,7 @@ namespace Common{
 			_data_receivers[i]->receive(ba, cb);
 		}
 
-		// Addition Funcs of waveform display
-		{
-			#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
-			WDReceiveData((PBYTE)ba, cb);
-		}
+		WDReceiveData((PBYTE)ba, cb);
 
 		_data_receiver_lock.unlock();
 	}
