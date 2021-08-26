@@ -6,6 +6,8 @@
 #include "asctable.h"
 #include "msg.h"
 
+#include "AdditionFuncs\WaveformDisplay\WaveformDisplay.h"
+
 namespace Common {
 	//////////////////////////////////////////////////////////////////////////
 	std::string CComWnd::c_comport::get_id_and_name() const
@@ -489,10 +491,10 @@ namespace Common {
 		case MENU_OTHER_NOTEPAD:	::ShellExecute(m_hWnd, "open", "notepad", NULL, NULL, SW_SHOWNORMAL); break;
 		case MENU_OTHER_DEVICEMGR:	::ShellExecute(m_hWnd, "open", "devmgmt.msc", NULL, NULL, SW_SHOWNORMAL); break;
 
-		case MENU_OTHER_MONITOR:
-		case MENU_OTHER_DRAW:
-			msgbox(MB_ICONINFORMATION,0,"not implemented!"); break;
-		case MENU_OTHER_NEWVERSION:break;
+        case MENU_OTHER_DRAW: WaveformDisplay(this); break;
+
+		case MENU_OTHER_MONITOR: msgbox(MB_ICONINFORMATION, 0, "not implemented!"); break;
+		case MENU_OTHER_NEWVERSION: break;
 
 		// 文本接收数据区菜单
 		case ID_EDITCONTEXTMENU_COPY:		_recv_char_edit.do_copy(); break;
