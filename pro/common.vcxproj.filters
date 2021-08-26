@@ -77,6 +77,12 @@
     <ClCompile Include="..\src\struct\list.c">
       <Filter>struct</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\AdditionFuncs\CConfig.cpp">
+      <Filter>AdditionFuncs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp">
+      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\struct\list.h">
@@ -160,6 +166,12 @@
     <ClInclude Include="..\src\struct\list.h">
       <Filter>struct</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\AdditionFuncs\CConfig.h">
+      <Filter>AdditionFuncs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.h">
+      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
@@ -173,6 +185,12 @@
     </Filter>
     <Filter Include="sdklayout">
       <UniqueIdentifier>{be4a60a9-8b68-4cfe-a520-35707917f52b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdditionFuncs">
+      <UniqueIdentifier>{65c54e63-b201-419c-a6a6-4cbf3cdcc42a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AdditionFuncs\WaveformDisplay">
+      <UniqueIdentifier>{32b4b594-9352-4267-ab87-26c969bdc334}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

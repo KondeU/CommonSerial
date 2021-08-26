@@ -107,6 +107,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\about.cpp" />
+    <ClCompile Include="..\src\AdditionFuncs\CConfig.cpp" />
+    <ClCompile Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp" />
     <ClCompile Include="..\src\asctable.cpp" />
     <ClCompile Include="..\src\comm.cpp" />
     <ClCompile Include="..\src\main.cpp" />
@@ -165,6 +167,8 @@
   <ItemGroup>
     <ClInclude Include="..\res\resource.h" />
     <ClInclude Include="..\src\about.h" />
+    <ClInclude Include="..\src\AdditionFuncs\CConfig.h" />
+    <ClInclude Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.h" />
     <ClInclude Include="..\src\asctable.h" />
     <ClInclude Include="..\src\comm.h" />
     <ClInclude Include="..\src\data.h" />
