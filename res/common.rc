@@ -7,8 +7,7 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include <windows.h>
-#include <winres.h>
+#include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -42,7 +41,7 @@ BEGIN
     CONTROL         "",IDC_CHK_AUTO_SEND,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,12,222,12,10
     PUSHBUTTON      "复制接收数据",IDC_BTN_COPY_RECV,78,132,61,16
     PUSHBUTTON      "清空接收数据",IDC_BTN_CLR_RECV,140,132,61,16
-    PUSHBUTTON      "暂停显示(&D)",IDC_BTN_STOPDISP,202,132,61,16
+    PUSHBUTTON      "暂停显示(&D)",IDC_BTN_STOPDISP,202,132,61,16,WS_DISABLED
     PUSHBUTTON      "保存到文件",IDC_BTN_SAVEFILE,264,132,61,16
     PUSHBUTTON      "工具箱",IDC_BTN_HELP,329,132,31,16,BS_MULTILINE
     EDITTEXT        IDC_EDIT_SEND,82,154,276,78,ES_MULTILINE | ES_AUTOVSCROLL | ES_NOHIDESEL | ES_WANTRETURN | WS_VSCROLL

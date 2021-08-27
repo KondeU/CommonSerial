@@ -172,6 +172,9 @@
     <ClInclude Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.h">
       <Filter>AdditionFuncs\WaveformDisplay</Filter>
     </ClInclude>
+    <ClInclude Include="..\res\afxres.h">
+      <Filter>resources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="resources">
