@@ -65,8 +65,8 @@ static COLORREF cr_table[] ={
 namespace Common{
 	int c_asctable_dlg::axisx = -1;
 	int c_asctable_dlg::axisy = -1;
-	int c_asctable_dlg::_fgcolor = 0;
-	int c_asctable_dlg::_bgcolor = 6;
+	int c_asctable_dlg::_fgcolor = 6;
+	int c_asctable_dlg::_bgcolor = 7;
 
 	LRESULT c_asctable_dlg::handle_message(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
 	{

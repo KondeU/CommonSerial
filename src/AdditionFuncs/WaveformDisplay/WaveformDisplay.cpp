@@ -861,7 +861,7 @@ bool WaveformDisplay(Common::CComWnd * pParent)
 
 void WDReceiveData(BYTE * pbyData, DWORD dwDataBytes)
 {
-	// Recv data buffer, it must be exactly the same as or over of comm.cpp(Line368)
+	// Recv data buffer, it must be exactly the same as or over of comm.cpp(Line307)
 	//static BYTE byRecvBuff[1 << 20];
 	static BYTE byRecvBuff[1 << 22];
 
