@@ -199,8 +199,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 2,1,0,0
- PRODUCTVERSION 2,0,0,0
+ FILEVERSION 2,2,0,0
+ PRODUCTVERSION 2,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -217,12 +217,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "KondeU"
             VALUE "FileDescription", "CommonSerial串口通信调试助手"
-            VALUE "FileVersion", "2.1.0.0"
+            VALUE "FileVersion", "2.2.0.0"
             VALUE "InternalName", "common"
-            VALUE "LegalCopyright", "CommonSerial Copyright (C) 2017 KondeU"
+            VALUE "LegalCopyright", "CommonSerial Copyright (C) 2017-2021 KondeU / 女孩不哭"
             VALUE "OriginalFilename", "common.exe"
             VALUE "ProductName", "CommonSerial"
-            VALUE "ProductVersion", "2.0.0.0"
+            VALUE "ProductVersion", "2.2.0.0"
         END
     END
     BLOCK "VarFileInfo"
@@ -268,8 +268,6 @@ IDR_MENU_MORE MENU
 BEGIN
     POPUP "popupmenu"
     BEGIN
-        MENUITEM "超时设置(&T)",                    MENU_MORE_TIMEOUTS, GRAYED
-        MENUITEM "驱动提供的设置(&D)",                 MENU_MORE_DRIVER, GRAYED
         MENUITEM "DTR/RTS引脚电平控制(&P)",           MENU_MORE_PINCTRL
     END
 END

@@ -1,27 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\src\struct\list.c">
-      <Filter>struct</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\struct\Thunk.cpp">
       <Filter>struct</Filter>
     </ClCompile>
     <ClCompile Include="..\src\struct\Config.cpp">
       <Filter>struct</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\struct\memory.cpp">
-      <Filter>struct</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\about.cpp" />
     <ClCompile Include="..\src\asctable.cpp" />
     <ClCompile Include="..\src\comm.cpp" />
-    <ClCompile Include="..\src\common.cpp" />
-    <ClCompile Include="..\src\DataProcessor.cpp" />
     <ClCompile Include="..\src\debug.cpp" />
     <ClCompile Include="..\src\msg.cpp" />
     <ClCompile Include="..\src\pinctrl.cpp" />
-    <ClCompile Include="..\src\SendCmd.cpp" />
     <ClCompile Include="..\src\stdafx.cpp" />
     <ClCompile Include="..\src\utils.cpp" />
     <ClCompile Include="..\src\Windows\FileDialog.cpp">
@@ -41,9 +32,6 @@
     </ClCompile>
     <ClCompile Include="..\src\Windows\Timer.cpp">
       <Filter>Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\tinyxml2\tinyxml2.cpp">
-      <Filter>tinyxml2</Filter>
     </ClCompile>
     <ClCompile Include="..\src\sdklayout\UIMarkup.cpp">
       <Filter>sdklayout</Filter>
@@ -84,18 +72,20 @@
     <ClCompile Include="..\src\Windows\DialogBuilder.cpp">
       <Filter>Windows</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp">
-      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\data.cpp" />
+    <ClCompile Include="..\src\struct\list.c">
+      <Filter>struct</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AdditionFuncs\CConfig.cpp">
       <Filter>AdditionFuncs</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.cpp">
+      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\struct\list.h">
-      <Filter>struct</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\struct\memory.h">
       <Filter>struct</Filter>
     </ClInclude>
     <ClInclude Include="..\src\struct\Thunk.h">
@@ -107,12 +97,9 @@
     <ClInclude Include="..\src\about.h" />
     <ClInclude Include="..\src\asctable.h" />
     <ClInclude Include="..\src\comm.h" />
-    <ClInclude Include="..\src\common.h" />
-    <ClInclude Include="..\src\DataProcessor.h" />
     <ClInclude Include="..\src\debug.h" />
     <ClInclude Include="..\src\msg.h" />
     <ClInclude Include="..\src\pinctrl.h" />
-    <ClInclude Include="..\src\SendCmd.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\utils.h" />
     <ClInclude Include="..\res\resource.h">
@@ -135,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="..\src\Windows\Timer.h">
       <Filter>Windows</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\tinyxml2\tinyxml2.h">
-      <Filter>tinyxml2</Filter>
     </ClInclude>
     <ClInclude Include="..\src\sdklayout\UIManager.h">
       <Filter>sdklayout</Filter>
@@ -178,11 +162,18 @@
     <ClInclude Include="..\src\Windows\DialogBuilder.h">
       <Filter>Windows</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.h">
-      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    <ClInclude Include="..\src\data.h" />
+    <ClInclude Include="..\src\struct\list.h">
+      <Filter>struct</Filter>
     </ClInclude>
     <ClInclude Include="..\src\AdditionFuncs\CConfig.h">
       <Filter>AdditionFuncs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AdditionFuncs\WaveformDisplay\WaveformDisplay.h">
+      <Filter>AdditionFuncs\WaveformDisplay</Filter>
+    </ClInclude>
+    <ClInclude Include="..\res\afxres.h">
+      <Filter>resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -195,17 +186,14 @@
     <Filter Include="Windows">
       <UniqueIdentifier>{15db0d98-9a56-4a42-a150-c5ad444cf07b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="tinyxml2">
-      <UniqueIdentifier>{69b2e2cd-48bd-4c70-9227-1fb680c14a4f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sdklayout">
       <UniqueIdentifier>{be4a60a9-8b68-4cfe-a520-35707917f52b}</UniqueIdentifier>
     </Filter>
     <Filter Include="AdditionFuncs">
-      <UniqueIdentifier>{8707d0f1-182f-4fd3-bc31-daaf251e7d0f}</UniqueIdentifier>
+      <UniqueIdentifier>{65c54e63-b201-419c-a6a6-4cbf3cdcc42a}</UniqueIdentifier>
     </Filter>
     <Filter Include="AdditionFuncs\WaveformDisplay">
-      <UniqueIdentifier>{9862ec5e-9044-4c9f-9de9-918ab188a533}</UniqueIdentifier>
+      <UniqueIdentifier>{32b4b594-9352-4267-ab87-26c969bdc334}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

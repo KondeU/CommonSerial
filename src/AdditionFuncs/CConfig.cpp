@@ -28,18 +28,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
 
-//--------------------------------------------//
-// CConfig.cpp                                //
-//                                            //
-// The implement of the class CConfig.        //
-// Can run in multi OS.                       //
-//                                            //
-// Writed by Deyou Kong, 2016-12-10           //
-// Checked by Deyou Kong, 2016-12-11          //
-// Found BUGs, see the "Note" in this file,   //
-//                     Deyou Kong, 2017-06-03 //
-//--------------------------------------------//
-
 #include "StdAfx.h" // Using in this "common" project.
 
 #include "CConfig.h"
